@@ -72,7 +72,6 @@ class GalileoSdkActivity: AppCompatActivity() {
                 }
                 override fun onPageFinished(view: WebView?, url: String?) {
                     Log.v("logData","onPageFinished - url - ${url.toString()}")
-
                     if(url.toString().contains("widget/v3/user-data"))
                     {
                         Handler().postDelayed(

@@ -1,6 +1,5 @@
-package com.aditya.galaliosdk
+package com.aditya.galileoSdk
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +22,7 @@ class MainActivity : AppCompatActivity(),SdkCallbacks{
                 customerDto.mobileNumber = "9876543210"
                 customerDto.walletAddress=""
                 customerDto.environment="test"
+                customerDto.referralCode=""
                var intent = Intent(this,GalileoSdkActivity::class.java)
                 intent.putExtra("context",this)
                 intent.putExtra("customerData",customerDto)

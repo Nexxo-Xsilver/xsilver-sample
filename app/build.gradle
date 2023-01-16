@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.aditya.galaliosdk'
+    namespace 'com.aditya.galileoSdk'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.aditya.galaliosdk"
+        applicationId "com.aditya.galileoSdk"
         minSdk 21
         targetSdk 32
         versionCode 1

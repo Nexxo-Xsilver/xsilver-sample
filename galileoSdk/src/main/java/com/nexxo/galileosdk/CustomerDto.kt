@@ -9,5 +9,6 @@ data class CustomerDto(
     var email: String? = "",
     var mobileNumber: String? = "",
     var walletAddress: String? = "",
-    var environment: String? = ""
+    var environment: String? = "",
+    var referralCode:String?=""
 ) : Parcelable
