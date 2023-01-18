@@ -1,4 +1,4 @@
-package com.nexxo.galileosdk
+package com.nexxo.galileosdk.interfaces
 
 import java.io.Serializable
 

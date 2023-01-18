@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- <domain-config>
+         <domain includeSubdomains="true">qa-bluebox-gateway.indipaisa.com</domain>
+     </domain-config>-->
+    <!--    <domain-config cleartextTrafficPermitted="true">-->
+    <!--        <domain includeSubdomains="true">13.235.71.238</domain>-->
+    <!--    </domain-config>-->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://sandbox.xsilver.com</domain>
+        <domain includeSubdomains="true">52.48.120.153</domain>
+        <domain includeSubdomains="true">34.252.40.108</domain>
+        <domain includeSubdomains="true">http://34.252.40.108:3030</domain>
+        <domain includeSubdomains="true">http://52.213.81.168:5301</domain>
+        <domain includeSubdomains="true">https://52.213.81.168:5301</domain>
+        <domain includeSubdomains="true">52.213.81.168</domain>
+        <domain includeSubdomains="true">52.213.81.168:5301</domain>
+        <domain includeSubdomains="true">52.66.186.101</domain>
+        <domain includeSubdomains="true">52.66.186.101:5023</domain>
+        <domain includeSubdomains="true">http://52.66.186.101:5023</domain>
+        <domain includeSubdomains="true">http://34.252.40.108:5023</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">http://fdypy.in</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">fdypy.in</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://prelive.fidypay.com</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://uat-geniusepay.in</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">prelive.fidypay.com</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">commondatastorage.googleapis.com</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">http://commondatastorage.googleapis.com</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">http://www.youtube.com</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://www.youtube.com</domain>
+    </domain-config>
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -1,4 +1,4 @@
-package com.nexxo.galileosdk
+package com.nexxo.galileosdk.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -7,7 +7,8 @@ import kotlinx.android.parcel.Parcelize
 data class CustomerDto(
 
     var email: String? = "",
-    var mobileNumber: String? = "",
+    var phoneNumber: String? = "",
+    var countryCode: String? = "",
     var walletAddress: String? = "",
     var environment: String? = "",
     var referralCode:String?=""
