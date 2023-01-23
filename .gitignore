@@ -51,6 +51,7 @@ Thumbs.db
 *.iml
 .gradle
 /local.properties
+/github.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -62,6 +63,7 @@ Thumbs.db
 .externalNativeBuild
 .cxx
 local.properties
+github.properties
 *.apk
 build
 .idea/*
