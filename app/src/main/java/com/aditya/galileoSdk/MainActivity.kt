@@ -37,33 +37,6 @@ class MainActivity : AppCompatActivity(), SdkCallbacks {
        }
     }
 
-/*    fun initinterface(){
-        try {
-            sdkCallbacks = object : SdkCallbacks {
-                override fun onSuccess(successResponse: String) {
-                    Log.v("logData", successResponse)
-                }
-
-                override fun onFailure(failureResponse: String) {
-                    Log.v("logData", failureResponse)
-                }
-
-                override fun onPending(pendingResponse: String) {
-                    Log.v("logData", pendingResponse)
-                }
-
-                override fun onUserCancel() {
-                    Log.v("logData", "Canceled by user")
-                }
-
-            }
-        }
-        catch (e:Exception)
-        {
-            Log.v("logData",e.localizedMessage)
-        }
-    }*/
-
     override fun onSuccess(successResponse: String) {
         Log.v("logData", "onSuccess - $successResponse")
         toastMsg("Success!!!!\n$successResponse")
@@ -86,6 +59,6 @@ class MainActivity : AppCompatActivity(), SdkCallbacks {
 
     private fun toastMsg(msg:String)
     {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
     }
 }

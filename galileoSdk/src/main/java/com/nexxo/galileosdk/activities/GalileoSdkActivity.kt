@@ -16,6 +16,7 @@ import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
 import com.nexxo.galileosdk.R
 import com.nexxo.galileosdk.interfaces.SdkCallbacks
 import com.nexxo.galileosdk.model.CustomerDto
@@ -55,7 +56,7 @@ class GalileoSdkActivity : AppCompatActivity() {
         mSdkCallbacks = intent.getSerializableExtra("context") as SdkCallbacks
         if (customerDto != null) {
             customerDto = intent.getParcelableExtra("customerData")!!
-            logData("customerDto -$customerDto")
+            UtilityKotlin.logData("customerDto -$customerDto")
             if (customerDto.environment?.lowercase() == "test") {
                 mUrlString =
                     "https://sandbox.xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
@@ -66,6 +67,8 @@ class GalileoSdkActivity : AppCompatActivity() {
         }
         mWebView = findViewById(R.id.webview)
         mWebView.settings.javaScriptEnabled = true
+        mWebView.settings.setAppCacheEnabled(false)
+        mWebView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
         mWebView.settings.loadWithOverviewMode = true
         mWebView.settings.useWideViewPort = true
         mWebView.settings.builtInZoomControls = false
@@ -86,15 +89,15 @@ class GalileoSdkActivity : AppCompatActivity() {
                     val requestedResources = request.resources
                     for (r in requestedResources) {
                         if (r == PermissionRequest.RESOURCE_VIDEO_CAPTURE) {
-                            logData("inside RESOURCE_VIDEO_CAPTURE - true")
+                            UtilityKotlin.logData("inside RESOURCE_VIDEO_CAPTURE - true")
                             request.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE))
                             checkCameraPermission()
                             break
                         } else
-                            logData("inside RESOURCE_VIDEO_CAPTURE - false")
+                            UtilityKotlin.logData("inside RESOURCE_VIDEO_CAPTURE - false")
                     }
                 } catch (e: Exception) {
-                    Log.v("logData", "Exception while onPermissionRequest - ${e.localizedMessage}")
+                    UtilityKotlin.logData("Exception while onPermissionRequest - ${e.localizedMessage}")
                 }
             }
 
@@ -106,7 +109,7 @@ class GalileoSdkActivity : AppCompatActivity() {
                 try {
                     callback?.invoke(origin, true, false)
                 } catch (e: Exception) {
-                    logData("Exception while onGeolocationPermissionsShowPrompt - ${e.localizedMessage}")
+                    UtilityKotlin.logData("Exception while onGeolocationPermissionsShowPrompt - ${e.localizedMessage}")
                 }
             }
         }
@@ -122,7 +125,7 @@ class GalileoSdkActivity : AppCompatActivity() {
                 mSdkCallbacks?.onUserCancel()
             }
         } catch (e: Exception) {
-            logData("exception while onBackPressed - ${e.localizedMessage}")
+            UtilityKotlin.logData("exception while onBackPressed - ${e.localizedMessage}")
         }
     }
 
@@ -130,41 +133,50 @@ class GalileoSdkActivity : AppCompatActivity() {
         try {
             mWebView.loadUrl(mUrlString)
             mWebView.webViewClient = object : WebViewClient() {
+                override fun onLoadResource(view: WebView?, url: String?) {
+                    super.onLoadResource(view, url)
+                    UtilityKotlin.logData("onLoadResource- $url")
+                }
+
+                override fun doUpdateVisitedHistory(
+                    view: WebView?,
+                    url: String?,
+                    isReload: Boolean
+                ) {
+                    super.doUpdateVisitedHistory(view, url, isReload)
+                    UtilityKotlin.logData("doUpdateVisitedHistory url-$url")
+//                    https://sandbox.xsilver.com/widget/v3/pg/webhook?finished=1
+                    if (url?.contains("finished") == true) {
+                        getTransactionStatus()
+                    }
+                }
+
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     url?.let { view?.loadUrl(it) }
-                    Log.v("logData", "shouldOverrideUrlLoading")
+                    UtilityKotlin.logData("shouldOverrideUrlLoading- $url")
                     return true
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
                     try {
-
-                        logData("onPageStarted - url - ${url.toString()}")
+                        UtilityKotlin.logData("onPageStarted - url - ${url.toString()}")
                     } catch (e: Exception) {
-                        logData("Exception while onPageStarted - ${e.localizedMessage}")
+                        UtilityKotlin.logData("Exception while onPageStarted - ${e.localizedMessage}")
                     }
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     try {
-                        logData("onPageFinished - url - ${url.toString()}")
+                        UtilityKotlin.logData("onPageFinished - url - ${url.toString()}")
                         if (url?.contains("webhook") == true) {
                             val uri = Uri.parse(url)
                             referenceNumber = uri.getQueryParameter("referenceNo").toString()
-                            logData("referenceNumber - $referenceNumber")
+                            UtilityKotlin.logData("referenceNumber - $referenceNumber")
                             verifyXsilverUser()
                         }
-                        else if (url?.contains("finished") == true) {
-                            val uri = Uri.parse(url)
-                            val finished = uri.getQueryParameter("finished")
-                            if (finished == "1")
-                            {
-                                getTransactionStatus()
-                            }
-                        }
                     } catch (e: Exception) {
-                        logData("Exception while onPageFinished - ${e.localizedMessage}")
+                        UtilityKotlin.logData("Exception while onPageFinished - ${e.localizedMessage}")
                     }
                 }
 
@@ -174,7 +186,7 @@ class GalileoSdkActivity : AppCompatActivity() {
                     error: WebResourceError?
                 ) {
                     super.onReceivedError(view, request, error)
-                    Log.v("logData", "onReceivedError - ${error.toString()}")
+                    UtilityKotlin.logData("onReceivedError - ${error.toString()}")
                 }
 
                 override fun onReceivedHttpError(
@@ -183,11 +195,11 @@ class GalileoSdkActivity : AppCompatActivity() {
                     errorResponse: WebResourceResponse?
                 ) {
                     super.onReceivedHttpError(view, request, errorResponse)
-                    Log.v("logData", "onReceivedHttpError - ${errorResponse.toString()}")
+                    UtilityKotlin.logData("onReceivedHttpError - ${errorResponse.toString()}")
                 }
             }
         } catch (e: Exception) {
-            Log.v("logData", "Exception while initWebView - ${e.localizedMessage}")
+            UtilityKotlin.logData("Exception while initWebView - ${e.localizedMessage}")
         }
     }
 
@@ -209,18 +221,18 @@ class GalileoSdkActivity : AppCompatActivity() {
                     }
                     if (perms[Manifest.permission.CAMERA] == PackageManager.PERMISSION_GRANTED
                     ) {
-                        Log.v("logData", "Camera permission granted")
+                        UtilityKotlin.logData("Camera permission granted")
 //                        mWebView.reload()
                     } else if (perms[Manifest.permission.READ_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED
                     ) {
-                        Log.v("logData", "Read storage permission granted")
+                        UtilityKotlin.logData("Read storage permission granted")
 //                        mWebView.reload()
                     } else if (perms[Manifest.permission.WRITE_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED
                     ) {
-                        Log.v("logData", "Write storage permission granted")
+                        UtilityKotlin.logData("Write storage permission granted")
                         mWebView.reload()
                     } else {
-                        Log.v("logData", "Camera permission is not granted ask again ")
+                        UtilityKotlin.logData("Camera permission is not granted ask again ")
                         if (ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
                                 Manifest.permission.READ_CONTACTS
@@ -279,7 +291,7 @@ class GalileoSdkActivity : AppCompatActivity() {
             }
             return true
         } catch (e: Exception) {
-            Log.v("logData", "Exception while checkCameraPermission - ${e.localizedMessage}")
+            UtilityKotlin.logData("Exception while checkCameraPermission - ${e.localizedMessage}")
         }
         return true
     }
@@ -297,7 +309,7 @@ class GalileoSdkActivity : AppCompatActivity() {
         try {
             showPopUp(this, string)
         } catch (e: Exception) {
-            Log.v("logData", "Exception while showSnackBar - ${e.localizedMessage}")
+            UtilityKotlin.logData("Exception while showSnackBar - ${e.localizedMessage}")
         }
     }
 
@@ -333,10 +345,6 @@ class GalileoSdkActivity : AppCompatActivity() {
         alertDialog2.show()
     }
 
-    fun logData(str: String?) {
-        Log.v("logData", str.toString())
-    }
-
     private fun getTransactionStatus() {
         try {
             CoroutineScope(
@@ -348,23 +356,23 @@ class GalileoSdkActivity : AppCompatActivity() {
                 val response = mainRepository.getTransactionDetails(url)
                 withContext(Dispatchers.Main) {
                     try {
-                        logData("Response of trxn status API - $response")
+                        UtilityKotlin.logData("Response of trxn status API - $response")
                         if (response.isSuccessful) {
                             val transactionStatusDto = response.body()
                             when (transactionStatusDto?.txnStatus) {
                                 "SUCCESSFUL" -> {
 //                                    SUCCESSFUL
-                                    mSdkCallbacks?.onSuccess(transactionStatusDto.toString())
+                                    mSdkCallbacks?.onSuccess(Gson().toJson(transactionStatusDto))
                                     finish()
                                 }
                                 "FAILED" -> {
 //                                    FAILED
-                                    mSdkCallbacks?.onFailure(transactionStatusDto.toString())
+                                    mSdkCallbacks?.onFailure(Gson().toJson(transactionStatusDto))
                                     finish()
                                 }
                                 "PENDING" -> {
 //                                    PENDING
-                                    mSdkCallbacks?.onPending(transactionStatusDto.toString())
+                                    mSdkCallbacks?.onPending(Gson().toJson(transactionStatusDto))
                                     finish()
                                 }
                             }
@@ -391,7 +399,7 @@ class GalileoSdkActivity : AppCompatActivity() {
 
     private fun verifyXsilverUser() {
         try {
-            logData("verifyXsilverUser API called")
+            UtilityKotlin.logData("verifyXsilverUser API called")
             CoroutineScope(
                 Dispatchers.IO + UtilityKotlin.onErrorCoroutineExceptionHandler(
                     this@GalileoSdkActivity
@@ -407,16 +415,16 @@ class GalileoSdkActivity : AppCompatActivity() {
                 )
                 withContext(Dispatchers.Main) {
                     try {
-                        logData("Response of check KYC required API - $response")
+                        UtilityKotlin.logData("Response of check KYC required API - $response")
                         if (response.isSuccessful) {
                             val verifyXsilverUserDto = response.body()
                             if (!TextUtils.isEmpty(verifyXsilverUserDto?.kycLevel)) {
-                                logData("KYC is required. Asking for permissions.")
+                                UtilityKotlin.logData("KYC is required. Asking for permissions.")
 //                                do kyc
 //                                ask camera and storage permission
                                 checkCameraPermission()
                             } else {
-                                logData("KYC is complete so no permission is required.")
+                                UtilityKotlin.logData("KYC is complete so no permission is required.")
                             }
                         } else {
                             try {
