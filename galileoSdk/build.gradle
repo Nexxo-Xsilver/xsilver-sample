@@ -44,7 +44,7 @@ def getVersionName = { ->
 }
 
 def getArtificatId = { ->
-    return "galileosdk" // Replace with library name ID
+    return "galileoSdk" // Replace with library name ID
 }
 
 publishing {
