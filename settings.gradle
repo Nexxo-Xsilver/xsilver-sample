@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 rootProject.name = "Galileo SDK"
 include ':app'
 include ':galileoSdk'
-include ':library'

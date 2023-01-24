@@ -40,23 +40,23 @@ githubProperties.load(new FileInputStream(rootProject.file("github.properties"))
 
 
 def getVersionName = { ->
-    return "1.0.0" // Replace with version Name
+    return "1.0.1" // Replace with version Name
 }
 
 def getArtificatId = { ->
-    return "xsilver-sample" // Replace with library name ID
+    return "galileosdk" // Replace with library name ID
 }
 
 publishing {
     publications {
         bar(MavenPublication) {
-            groupId 'com.github.Nexxo-Xsilver'
+            groupId 'com.nexxo'
             artifactId getArtificatId()
             version getVersionName()
             artifact("$buildDir/outputs/aar/${getArtificatId()}-release.aar")
 
             //generate .pom file with transitive dependencies
-            pom.withXml {
+            /*pom.withXml {
                 final dependenciesNode = asNode().appendNode('dependencies')
                 ext.addDependency = { Dependency dep, String scope ->
                     if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
@@ -78,10 +78,10 @@ publishing {
                         }
                     }
                 }
-                configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
-                configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
+                configurations.compile.getDependencies().each { dep -> addDependency(dep, "implementation") }
+                configurations.api.getDependencies().each { dep -> addDependency(dep, "implementation") }
                 configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
-            }
+            }*/
         }
     }
 
