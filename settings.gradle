@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Galalio SDk"
+rootProject.name = "Galileo SDK"
 include ':app'
 include ':galileoSdk'
+include ':library'
