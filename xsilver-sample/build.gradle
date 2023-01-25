@@ -46,7 +46,7 @@ githubProperties.load(new FileInputStream(rootProject.file("github.properties"))
 
 
 def getVersionName = { ->
-    return "1.0.3" // Replace with version Name
+    return "1.1.2" // Replace with version Name
 }
 
 def getArtificatId = { ->
@@ -62,7 +62,7 @@ afterEvaluate {
                 groupId 'Nexxo-Xsilver'
                 artifactId getArtificatId()
                 version getVersionName()
-                artifact("$buildDir/outputs/aar/${getArtificatId()}-release.aar")
+//                artifact("$buildDir/outputs/aar/${getArtificatId()}-release.aar")
 
 
                 //generate .pom file with transitive dependencies
