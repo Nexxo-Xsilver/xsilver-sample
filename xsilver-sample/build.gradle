@@ -32,6 +32,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
@@ -44,17 +50,20 @@ def getVersionName = { ->
 }
 
 def getArtificatId = { ->
-    return "galileosdk" // Replace with library name ID
+    return "xsilver-sample" // Replace with library name ID
 }
 
 publishing {
     publications {
         bar(MavenPublication) {
-            groupId 'com.nexxo'
+            groupId 'Nexxo-Xsilver'
             artifactId getArtificatId()
             version getVersionName()
             artifact("$buildDir/outputs/aar/${getArtificatId()}-release.aar")
 
+            afterEvaluate {
+                from(components["release"])
+            }
             //generate .pom file with transitive dependencies
             /*pom.withXml {
                 final dependenciesNode = asNode().appendNode('dependencies')
