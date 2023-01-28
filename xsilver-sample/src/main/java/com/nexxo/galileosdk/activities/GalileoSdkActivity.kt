@@ -11,14 +11,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.nexxo.galileosdk.R
-import com.nexxo.galileosdk.interfaces.SdkCallbacks
+import com.nexxo.galileosdk.interfaces.TransactionCallbacks
 import com.nexxo.galileosdk.model.CustomerDto
 import com.nexxo.galileosdk.network.MainRepository
 import com.nexxo.galileosdk.network.RetrofitService
@@ -35,12 +34,10 @@ class GalileoSdkActivity : AppCompatActivity() {
     private val MAIN_BASE_URL: String = ""
     private var mUrlString = "https://sandbox.xsilver.com/widget/nexxoio"
     private lateinit var mWebView: WebView
-    private var mSdkCallbacks: SdkCallbacks? = null
+    private var mTransactionCallbacks: TransactionCallbacks? = null
     private var customerDto: CustomerDto = CustomerDto()
     private var mPermissionRequest: PermissionRequest? = null
     private val REQUEST_CAMERA_PERMISSION = 1
-    private val PERM_CAMERA = arrayOf(Manifest.permission.CAMERA)
-    private val PERM_LOCATION = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
 
     //API Call
     private val retrofitService = RetrofitService.getInstance()
@@ -53,7 +50,7 @@ class GalileoSdkActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mSdkCallbacks = intent.getSerializableExtra("context") as SdkCallbacks
+        mTransactionCallbacks = intent.getSerializableExtra("context") as TransactionCallbacks
         if (customerDto != null) {
             customerDto = intent.getParcelableExtra("customerData")!!
             UtilityKotlin.logData("customerDto -$customerDto")
@@ -122,7 +119,7 @@ class GalileoSdkActivity : AppCompatActivity() {
             if (mWebView.canGoBack()) {
                 mWebView.goBack()
             } else {
-                mSdkCallbacks?.onUserCancel()
+                mTransactionCallbacks?.onUserCancel()
             }
         } catch (e: Exception) {
             UtilityKotlin.logData("exception while onBackPressed - ${e.localizedMessage}")
@@ -135,7 +132,7 @@ class GalileoSdkActivity : AppCompatActivity() {
             mWebView.webViewClient = object : WebViewClient() {
                 override fun onLoadResource(view: WebView?, url: String?) {
                     super.onLoadResource(view, url)
-                    UtilityKotlin.logData("onLoadResource- $url")
+//                    UtilityKotlin.logData("onLoadResource- $url")
                 }
 
                 override fun doUpdateVisitedHistory(
@@ -145,7 +142,6 @@ class GalileoSdkActivity : AppCompatActivity() {
                 ) {
                     super.doUpdateVisitedHistory(view, url, isReload)
                     UtilityKotlin.logData("doUpdateVisitedHistory url-$url")
-//                    https://sandbox.xsilver.com/widget/v3/pg/webhook?finished=1
                     if (url?.contains("finished") == true) {
                         getTransactionStatus()
                     }
@@ -235,7 +231,7 @@ class GalileoSdkActivity : AppCompatActivity() {
                         UtilityKotlin.logData("Camera permission is not granted ask again ")
                         if (ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
-                                Manifest.permission.READ_CONTACTS
+                                Manifest.permission.CAMERA
                             )
                         ) {
                             showDialogOK(
@@ -246,7 +242,7 @@ class GalileoSdkActivity : AppCompatActivity() {
                                     DialogInterface.BUTTON_NEGATIVE -> {
                                         showSnackBar(
                                             "In order to work properly " + getString(R.string.app_name) + " App needs some permission.",
-                                            "GO TO Settings"
+                                            "Go To Settings"
                                         )
                                     }
                                 }
@@ -254,7 +250,7 @@ class GalileoSdkActivity : AppCompatActivity() {
                         } else {
                             showSnackBar(
                                 "In order to work properly " + getString(R.string.app_name) + " App needs some permission.",
-                                "GO TO Settings"
+                                "Go To Settings"
                             )
                             //                            //proceed with logic by disabling the related features or quit the app.
                         }
@@ -358,23 +354,29 @@ class GalileoSdkActivity : AppCompatActivity() {
                     try {
                         UtilityKotlin.logData("Response of trxn status API - $response")
                         if (response.isSuccessful) {
-                            val transactionStatusDto = response.body()
-                            when (transactionStatusDto?.txnStatus) {
-                                "SUCCESSFUL" -> {
+                            try {
+                                val transactionStatusDto = response.body()
+                                when (transactionStatusDto?.txnStatus) {
+                                    "SUCCESSFUL" -> {
 //                                    SUCCESSFUL
-                                    mSdkCallbacks?.onSuccess(Gson().toJson(transactionStatusDto))
-                                    finish()
-                                }
-                                "FAILED" -> {
+                                        mTransactionCallbacks?.onSuccess(Gson().toJson(transactionStatusDto))
+                                        finish()
+                                    }
+                                    "FAILED" -> {
 //                                    FAILED
-                                    mSdkCallbacks?.onFailure(Gson().toJson(transactionStatusDto))
-                                    finish()
-                                }
-                                "PENDING" -> {
+                                        mTransactionCallbacks?.onFailure(Gson().toJson(transactionStatusDto))
+                                        finish()
+                                    }
+                                    "PENDING" -> {
 //                                    PENDING
-                                    mSdkCallbacks?.onPending(Gson().toJson(transactionStatusDto))
-                                    finish()
+                                        mTransactionCallbacks?.onPending(Gson().toJson(transactionStatusDto))
+                                        finish()
+                                    }
                                 }
+                            }
+                            catch (e:Exception)
+                            {
+                                UtilityKotlin.logData("Exception while response.isSuccessful -${e.localizedMessage}")
                             }
                         } else {
                             try {

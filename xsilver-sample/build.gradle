@@ -44,7 +44,6 @@ android {
 /*def githubProperties = new Properties()
 githubProperties.load(new FileInputStream(rootProject.file("github.properties")))*/
 
-
 def getVersionName = { ->
     return "1.1.2" // Replace with version Name
 }
@@ -54,7 +53,6 @@ def getArtificatId = { ->
 }
 
 afterEvaluate {
-    /*from(components["release"])*/
     publishing {
         publications {
             release(MavenPublication) {
@@ -62,36 +60,6 @@ afterEvaluate {
                 groupId 'Nexxo-Xsilver'
                 artifactId getArtificatId()
                 version getVersionName()
-//                artifact("$buildDir/outputs/aar/${getArtificatId()}-release.aar")
-
-
-                //generate .pom file with transitive dependencies
-                /*pom.withXml {
-                    final dependenciesNode = asNode().appendNode('dependencies')
-                    ext.addDependency = { Dependency dep, String scope ->
-                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                            return
-                        final dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dep.group)
-                        dependencyNode.appendNode('artifactId', dep.name)
-                        dependencyNode.appendNode('version', dep.version)
-                        dependencyNode.appendNode('scope', scope)
-                        if (!dep.transitive) {
-                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                            exclusionNode.appendNode('groupId', '*')
-                            exclusionNode.appendNode('artifactId', '*')
-                        } else if (!dep.properties.excludeRules.empty) {
-                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                            dep.properties.excludeRules.each { ExcludeRule rule ->
-                                exclusionNode.appendNode('groupId', rule.group ?: '*')
-                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
-                            }
-                        }
-                    }
-                    configurations.compile.getDependencies().each { dep -> addDependency(dep, "implementation") }
-                    configurations.api.getDependencies().each { dep -> addDependency(dep, "implementation") }
-                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
-                }*/
             }
         }
 
@@ -135,5 +103,4 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4"
-
 }

@@ -6,11 +6,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import com.nexxo.galileosdk.model.CustomerDto
 import com.nexxo.galileosdk.activities.GalileoSdkActivity
-import com.nexxo.galileosdk.interfaces.SdkCallbacks
+import com.nexxo.galileosdk.interfaces.TransactionCallbacks
+import com.nexxo.galileosdk.model.CustomerDto
 
-class MainActivity : AppCompatActivity(), SdkCallbacks {
+class MainActivity : AppCompatActivity(), TransactionCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

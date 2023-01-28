@@ -2,7 +2,7 @@ package com.nexxo.galileosdk.interfaces
 
 import java.io.Serializable
 
-interface SdkCallbacks: Serializable {
+interface TransactionCallbacks: Serializable {
 
     public fun onSuccess(successResponse: String)
 
