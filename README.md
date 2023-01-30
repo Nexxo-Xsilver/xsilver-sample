@@ -31,5 +31,3 @@
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Nexxo-Xsilver&layout=compact)](https://github.com/Nexxo-Xsilver)
 
 [![Visitors](https://visitor-badge.glitch.me/badge?page_id=Nexxo-Xsilver.Nexxo-Xsilver)](https://www.yushi.dev/)
-<br>
-README.txt hosted with ❤ by GitHub
