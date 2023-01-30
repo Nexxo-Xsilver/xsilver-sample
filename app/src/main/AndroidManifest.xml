@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.aditya.galileoSdk">
+    package="com.nexxo.galileoSdkSample">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Permission required for Checking Internet Connection -->
@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.nexxo.galileoSdkSample.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

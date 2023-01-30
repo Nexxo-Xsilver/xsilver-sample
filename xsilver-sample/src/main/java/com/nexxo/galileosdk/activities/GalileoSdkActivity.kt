@@ -32,7 +32,7 @@ import org.json.JSONObject
 class GalileoSdkActivity : AppCompatActivity() {
     private var referenceNumber: String = ""
     private val MAIN_BASE_URL: String = ""
-    private var mUrlString = "https://sandbox.xsilver.com/widget/nexxoio"
+    private var mUrlString = "https://sandbox.xsilver.com/widget/"
     private lateinit var mWebView: WebView
     private var mTransactionCallbacks: TransactionCallbacks? = null
     private var customerDto: CustomerDto = CustomerDto()
@@ -54,12 +54,10 @@ class GalileoSdkActivity : AppCompatActivity() {
         if (customerDto != null) {
             customerDto = intent.getParcelableExtra("customerData")!!
             UtilityKotlin.logData("customerDto -$customerDto")
-            if (customerDto.environment?.lowercase() == "test") {
-                mUrlString =
-                    "https://sandbox.xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
+            mUrlString = if (customerDto.environment?.lowercase() == "test") {
+                "https://sandbox.xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
             } else {
-                mUrlString =
-                    "https://sandbox.xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
+                "https://xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
             }
         }
         mWebView = findViewById(R.id.webview)

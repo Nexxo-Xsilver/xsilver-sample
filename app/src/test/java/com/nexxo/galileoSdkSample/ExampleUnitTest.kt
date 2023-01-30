@@ -1,4 +1,4 @@
-package com.aditya.galileoSdk
+package com.nexxo.galileoSdkSample
 
 import org.junit.Test
 
