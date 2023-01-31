@@ -39,25 +39,18 @@ class MainActivity : AppCompatActivity(), TransactionCallbacks {
 
     override fun onSuccess(successResponse: String) {
         Log.v("logData", "onSuccess - $successResponse")
-        toastMsg("Success!!!!\n$successResponse")
     }
 
     override fun onFailure(failureResponse: String) {
         Log.v("logData", "onFailure - $failureResponse")
-        toastMsg("Failure!!!!\n$failureResponse")
     }
 
     override fun onPending(pendingResponse: String) {
         Log.v("logData", "onPending -$pendingResponse")
-        toastMsg("Pending!!!!\n$pendingResponse")
     }
 
     override fun onUserCancel() {
         Log.v("logData", "Canceled by user")
-        toastMsg("Canceled by user")
     }
 
-    private fun toastMsg(msg: String) {
-        Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
-    }
 }
