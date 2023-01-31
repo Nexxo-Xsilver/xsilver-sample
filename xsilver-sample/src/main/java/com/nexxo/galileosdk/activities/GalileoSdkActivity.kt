@@ -50,15 +50,25 @@ class GalileoSdkActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mTransactionCallbacks = intent.getSerializableExtra("context") as TransactionCallbacks
-        if (customerDto != null) {
-            customerDto = intent.getParcelableExtra("customerData")!!
-            UtilityKotlin.logData("customerDto -$customerDto")
-            mUrlString = if (customerDto.environment?.lowercase() == "test") {
-                "https://sandbox.xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
-            } else {
-                "https://xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
+        try {
+            if (customerDto != null) {
+                customerDto = intent.getParcelableExtra("customerData")!!
+                UtilityKotlin.logData("customerDto -$customerDto")
+                if (customerDto.environment?.lowercase() == "test") {
+                    mUrlString =
+                        "https://sandbox.xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
+                    Constants.MAIN_BASE_URL = "https://sandbox.xsilver.com/"
+                } else {
+                    mUrlString =
+                        "https://xsilver.com/widget/${customerDto.referralCode}?phoneNumber=${customerDto.phoneNumber}&countryCode=${customerDto.countryCode}&email=${customerDto.email}&walletAddress=${customerDto.walletAddress}"
+                    Constants.MAIN_BASE_URL = "https://xsilver.com/"
+                }
             }
+            mTransactionCallbacks = intent.getSerializableExtra("context") as TransactionCallbacks
+        }
+        catch (e:Exception)
+        {
+            UtilityKotlin.logData("Exception while getting intent data -${e.localizedMessage}")
         }
         mWebView = findViewById(R.id.webview)
         mWebView.settings.javaScriptEnabled = true
@@ -357,23 +367,33 @@ class GalileoSdkActivity : AppCompatActivity() {
                                 when (transactionStatusDto?.txnStatus) {
                                     "SUCCESSFUL" -> {
 //                                    SUCCESSFUL
-                                        mTransactionCallbacks?.onSuccess(Gson().toJson(transactionStatusDto))
+                                        mTransactionCallbacks?.onSuccess(
+                                            Gson().toJson(
+                                                transactionStatusDto
+                                            )
+                                        )
                                         finish()
                                     }
                                     "FAILED" -> {
 //                                    FAILED
-                                        mTransactionCallbacks?.onFailure(Gson().toJson(transactionStatusDto))
+                                        mTransactionCallbacks?.onFailure(
+                                            Gson().toJson(
+                                                transactionStatusDto
+                                            )
+                                        )
                                         finish()
                                     }
                                     "PENDING" -> {
 //                                    PENDING
-                                        mTransactionCallbacks?.onPending(Gson().toJson(transactionStatusDto))
+                                        mTransactionCallbacks?.onPending(
+                                            Gson().toJson(
+                                                transactionStatusDto
+                                            )
+                                        )
                                         finish()
                                     }
                                 }
-                            }
-                            catch (e:Exception)
-                            {
+                            } catch (e: Exception) {
                                 UtilityKotlin.logData("Exception while response.isSuccessful -${e.localizedMessage}")
                             }
                         } else {

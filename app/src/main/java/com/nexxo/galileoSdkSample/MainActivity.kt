@@ -11,6 +11,7 @@ import com.nexxo.galileosdk.interfaces.TransactionCallbacks
 import com.nexxo.galileosdk.model.CustomerDto
 
 class MainActivity : AppCompatActivity(), TransactionCallbacks {
+//    make sure you implement the TransactionCallbacks interface so you will get notified on the overridden methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,16 +19,16 @@ class MainActivity : AppCompatActivity(), TransactionCallbacks {
         try {
             val btn = findViewById<AppCompatButton>(R.id.btn_go_to_sdk)
             btn.setOnClickListener {
-                var customerDto = CustomerDto()
+                val customerDto = CustomerDto()
                 customerDto.email = "ansh@mailinator.com" //customer's email address
                 customerDto.phoneNumber = "9354487741" //customer's phone number
                 customerDto.countryCode = "+91" //customer's ISD code
                 customerDto.walletAddress =
                     "0xaEf6A0E48914499D6F7909a8DDb0Dda82b1Ecdb4" //customer's crypto wallet address
-                customerDto.environment = "test" //environment test or live
+                customerDto.environment = "test" //environment "test" or "live"
                 customerDto.referralCode = "nexxoio" //partner's referral code
                 val intent = Intent(this, GalileoSdkActivity::class.java)
-                intent.putExtra("context", this)
+                intent.putExtra("context", this) //required to get the instance of interface implemented here
                 intent.putExtra("customerData", customerDto)
                 startActivity(intent)
             }
