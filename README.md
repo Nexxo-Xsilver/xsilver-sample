@@ -16,8 +16,10 @@
 <br>
 - Add this line to your app's build.gradle inside the dependencies section: <br>
 <i>dependencies {
-      implementation 'com.github.Nexxo-Xsilver:xsilver-sample:1.1.2'
+      implementation 'com.github.Nexxo-Xsilver:xsilver-sample:1.1.5'
 }</i>
+<br>
+You can check the latest build version on <a href="https://jitpack.io/#Nexxo-Xsilver/xsilver-sample" target="_blank">Jitpack</a>
 <br>
 - To hand over control to SDK for buying cryptocurrncy, refer <a href="https://github.com/Nexxo-Xsilver/xsilver-sample/blob/dev_shadab/app/src/main/java/com/aditya/galileoSdk/MainActivity.kt" target="_blank">MainActivity</a>.
 <br>
